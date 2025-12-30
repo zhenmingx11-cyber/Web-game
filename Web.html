@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>連接詞練習</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <style>
+        /* ================= 核心變量 ================= */
+        :root {
+            --font-main: 'ZCOOL KuaiLe', cursive;
+            --bg-sky: #87CEEB;
+            --card-bg: #FFFFFF;
+            --primary-color: #FF7043;
+            --zone-border: #BDBDBD;
+            --zone-active: #FFEB3B;
+            --zone-correct: #AED581;
+        }
+
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; font-family: var(--font-main); background-color: var(--bg-sky); height: 100vh; width: 100vw; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
+
+        /* ================= 背景裝飾 ================= */
+        .sky-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: linear-gradient(180deg, #4FC3F7 0%, #81D4FA 100%); }
+        .cloud { position: absolute; background: rgba(255, 255, 255, 0.8); border-radius: 50px; animation: floatCloud linear infinite; }
+        .cloud::after, .cloud::before { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+        .c1 { width: 120px; height: 50px; top: 10%; left: -20%; animation-duration: 25s; }
+        .c1::after { width: 60px; height: 60px; top: -30px; left: 15px; }
+        .c1::before { width: 50px; height: 50px; top: -20px; left: 55px; }
+        .c2 { width: 100px; height: 40px; top: 30%; left: -20%; animation-duration: 35s; animation-delay: 5s; opacity: 0.7; }
+        .c2::after { width: 50px; height: 50px; top: -25px; left: 10px; }
+        .c3 { width: 150px; height: 60px; top: 60%; left: -20%; animation-duration: 20s; animation-delay: 2s; }
+        .c3::after { width: 70px; height: 70px; top: -35px; left: 20px; }
+        .c3::before { width: 60px; height: 60px; top: -25px; left: 70px; }
+        @keyframes floatCloud { 0% { transform: translateX(-150px); } 100% { transform: translateX(110vw); } }
+        .grass { position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; background: #AED581; border-radius: 50% 50% 0 0 / 100% 100% 0 0; transform: scaleX(1.5); z-index: 1; }
+        .mascot { position: absolute; font-size: 80px; z-index: 20; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); animation: bounce 3s infinite ease-in-out; pointer-events: none; }
+        .mascot-l { bottom: -10px; left: 10px; transform: rotate(-10deg); }
+        .mascot-r { bottom: -10px; right: 10px; transform: rotate(10deg); animation-delay: 1.5s; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0) rotate(10deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
+
+        /* ================= 主容器 ================= */
+        .app-container {
+            width: 95vw; height: 95vh;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 40px; border: 8px solid #fff;
+            box-shadow: 0 0 0 8px #B3E5FC, 0 20px 50px rgba(0, 0, 0, 0.2);
+            display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 10;
+        }
+
+        /* ================= 通用按鈕 ================= */
+        .btn { cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; }
+        .btn:active { transform: scale(0.9); }
+        .sound-btn { width: 50px; height: 50px; background: #FFEB3B; border-radius: 50%; border: 4px solid #FBC02D; color: #F57F17; font-size: 26px; box-shadow: 0 4px 0 #FBC02D; margin-left: 15px; flex-shrink: 0; }
+        .sound-btn:active { box-shadow: 0 0 0 #FBC02D; transform: translateY(4px); }
+        .back-btn { position: absolute; top: 20px; left: 20px; background: #FF7043; color: white; padding: 10px 25px; border-radius: 30px; font-size: 24px; border: 4px solid #fff; box-shadow: 0 5px 0 #D84315, 0 5px 10px rgba(0,0,0,0.2); z-index: 100; }
+        .back-btn:active { box-shadow: 0 0 0 #D84315, inset 0 2px 5px rgba(0,0,0,0.2); transform: translateY(5px); }
+
+        /* ================= 屏幕樣式 ================= */
+        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 10; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        
+        .menu-title {
+            font-size: 8vh;
+            color: #01579B;
+            margin-bottom: 5vh;
+            font-weight: 900;
+            text-shadow: 3px 3px 0 #fff, -3px -3px 0 #fff, 3px -3px 0 #fff, -3px 3px 0 #fff, 3px 3px 0 #fff, 0px 8px 5px rgba(0,0,0,0.2);
+            -webkit-text-stroke: 0px;
+            animation: wiggle 3s infinite;
+        }
+        @keyframes wiggle { 0%,100%{transform:rotate(-3deg);} 50%{transform:rotate(3deg);} }
+        
+        .menu-grid { display: flex; gap: 4vw; width: 90%; justify-content: center; flex-wrap: wrap; }
+        .theme-card { flex: 0 0 25%; max-width: 300px; aspect-ratio: 3/4; background: #fff; border-radius: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 8px solid transparent; position: relative; overflow: hidden; margin-bottom: 10px; }
+        
+        .theme-1 { border-color: #4FC3F7; background: radial-gradient(circle at 50% 30%, #E1F5FE, #fff); box-shadow: 0 10px 0 #0288D1; }
+        .theme-2 { border-color: #FFB74D; background: radial-gradient(circle at 50% 30%, #FFF3E0, #fff); box-shadow: 0 10px 0 #F57C00; }
+        /* 新增第三章主題色：清新綠 */
+        .theme-3 { border-color: #AED581; background: radial-gradient(circle at 50% 30%, #F1F8E9, #fff); box-shadow: 0 10px 0 #689F38; }
+
+        .theme-card:active { transform: translateY(10px); box-shadow: 0 0 0 transparent; }
+        .card-icon { font-size: 100px; margin-bottom: 20px; filter: drop-shadow(0 5px 0 rgba(0,0,0,0.1)); transition: transform 0.3s; }
+        .theme-card:hover .card-icon { transform: scale(1.2); }
+        .card-text { font-size: 36px; color: #546E7A; font-weight: 900; }
+
+        .level-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 90%; height: 75%; overflow-y: auto; padding: 20px; }
+        .level-btn { background: #fff; border: 4px solid #AED581; border-radius: 30px; padding: 15px; display: flex; align-items: center; gap: 20px; box-shadow: 0 8px 0 #7CB342; }
+        .level-btn:active { box-shadow: 0 0 0 #7CB342; transform: translateY(8px); }
+        .level-num { background: #DCEDC8; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #33691E; font-weight: 900; border: 3px solid #fff; box-shadow: 0 3px 5px rgba(0,0,0,0.1); flex-shrink: 0; }
+        
+        /* === 關卡縮略圖 120px === */
+        .level-thumb { width: 120px; height: 120px; border-radius: 15px; object-fit: cover; border: 3px solid #AED581; background: #fff; margin-right: 10px; flex-shrink: 0; }
+        
+        .level-name { font-size: 26px; color: #555; font-weight: bold; }
+
+        /* ================= 遊戲佈局 ================= */
+        .game-layout { display: flex; width: 100%; height: 100%; padding: 20px; padding-top: 90px; padding-bottom: 20px; gap: 20px; overflow: hidden; }
+        .left-panel { flex: 1; max-width: 35%; display: flex; flex-direction: column; background: #E1F5FE; border-radius: 30px; border: 8px solid #fff; box-shadow: 0 10px 0 #81D4FA; padding: 15px; align-items: center; justify-content: center; position: relative; }
+        .left-panel::before { content: '📌'; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 40px; }
+        .q-text { font-size: 32px; color: #01579B; display: flex; align-items: center; text-align: center; margin-bottom: 15px; font-weight: 900; line-height: 1.4; }
+        .q-img { width: 100%; flex: 1; object-fit: contain; background: #fff; border-radius: 20px; padding: 10px; border: 3px dashed #B3E5FC; }
+        
+        .right-panel { flex: 2; display: flex; flex-direction: column; gap: 15px; min-height: 0; height: 100%; }
+        
+        .answer-area { flex: 1; min-height: 0; background: #fff; border-radius: 30px; border: 5px dashed #FFAB91; display: flex; align-items: center; padding: 5px; position: relative; }
+
+        .store-area { flex-shrink: 0; background: #FFF9C4; border-radius: 30px; border: 6px solid #FBC02D; display: flex; flex-direction: column; position: relative; padding: 10px; box-shadow: inset 0 0 20px rgba(251, 192, 45, 0.2); }
+        .store-label { position: absolute; top: -20px; left: 20px; background: #FBC02D; color: #fff; padding: 5px 25px; border-radius: 20px; font-size: 22px; border: 4px solid #fff; font-weight: 900; z-index: 5; box-shadow: 0 4px 0 rgba(0,0,0,0.1); }
+        .store-scroll { display: flex; flex-direction: row; align-items: center; gap: 20px; width: 100%; height: 100%; overflow-x: auto; padding: 15px; }
+
+        .answer-group { display: flex; align-items: center; gap: 10px; z-index: 1; }
+        .label-text { font-size: 36px; color: #FF7043; font-weight: 900; display: flex; align-items: center; text-shadow: 2px 2px 0 #fff; -webkit-text-stroke: 1px #fff; }
+
+        /* ================= 放置區優化 (Visual Cues) ================= */
+        .drop-zone {
+            height: 18vh; aspect-ratio: 1/1;
+            background: #F5F5F5; /* 更柔和的背景 */
+            border: 4px dashed var(--zone-border); /* 虛線更明顯 */
+            border-radius: 25px;
+            display: flex; justify-content: center; align-items: center;
+            position: relative; overflow: hidden; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* 平滑過渡 */
+            min-height: 100px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+        /* 框內提示文字 */
+        .drop-zone::before { 
+            content: attr(data-label); /* 動態讀取標籤 */
+            color: #E0E0E0; 
+            font-size: 4vh; 
+            font-weight: 900; 
+            position: absolute;
+            z-index: 0;
+        }
+        
+        .drop-zone.highlight { 
+            background: #FFF9C4; 
+            border-color: var(--zone-active); 
+            transform: scale(1.05); 
+            box-shadow: 0 0 15px rgba(255, 235, 59, 0.6);
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% { border-color: #FBC02D; } 50% { border-color: #FF5722; } 100% { border-color: #FBC02D; } }
+
+        .drop-zone.correct { background: #fff; border: 6px solid var(--zone-correct); box-shadow: 0 0 0 5px #DCEDC8; }
+        .drop-zone.correct::before { display: none; }
+
+        /* ================= 卡片樣式 ================= */
+        .card {
+            height: 17vh; aspect-ratio: 1/1;
+            background: #fff; 
+            border-radius: 15px; 
+            border: 0;
+            padding: 8px 8px 25px 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08); 
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            cursor: grab; 
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            position: relative;
+        }
+        .store-scroll .card:nth-child(odd) { transform: rotate(-2deg); }
+        .store-scroll .card:nth-child(even) { transform: rotate(2deg); }
+        .card:hover { transform: translateY(-5px) scale(1.02) rotate(0deg); box-shadow: 0 10px 15px rgba(0,0,0,0.15); z-index: 10; }
+        .card:active { cursor: grabbing; }
+        .card.dragging { 
+            opacity: 0.6; 
+            transform: scale(1.1) rotate(5deg) !important; 
+            box-shadow: 0 20px 25px rgba(0,0,0,0.2);
+            pointer-events: none; 
+        }
+        .card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; border-radius: 8px; background: #f0f0f0; }
+        
+        .drop-zone .card {
+            position: absolute !important; top: 0 !important; left: 0 !important;
+            width: 100% !important; height: 100% !important;
+            padding: 0 !important; border-radius: 18px !important;
+            margin: 0 !important; transform: none !important; 
+            box-shadow: none !important;
+            cursor: default; z-index: 10;
+        }
+        .drop-zone .card img { border-radius: 18px; }
+
+        .mode-split .left-panel { display: flex; }
+        .mode-split .answer-area { flex-direction: row; justify-content: center; gap: 5vw; }
+        .mode-split .answer-group { flex-direction: column; width: auto; justify-content: center; }
+        .mode-split .store-area { height: 35vh; }
+        .mode-split .drop-zone { height: 28vh; max-height: 100%; max-width: 100%; }
+        .mode-split .card { height: 27vh; }
+
+        .mode-full .left-panel { display: none; }
+        .mode-full .answer-area { flex-direction: row; justify-content: space-around; padding: 0 1vw; }
+        .mode-full .answer-group { flex-direction: column; gap: 1vh; position: relative; flex: 1; justify-content: center; align-items: center; }
+        .mode-full .answer-group:not(:last-child)::after {
+            content: '➡'; font-size: 5vh; color: #FFB74D;
+            position: absolute; right: -15%; top: 55%; transform: translateY(-50%); z-index: 2;
+            text-shadow: 2px 2px 0 #fff;
+        }
+        .mode-full .store-area { height: 30vh; }
+        .mode-full .drop-zone { height: 24vh; }
+        .mode-full .card { height: 23vh; }
+
+        /* ================= 成功彈窗 ================= */
+        .modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 500; display: none; justify-content: center; align-items: center; }
+        .modal-box { background: #fff; padding: 30px; border-radius: 50px; text-align: center; width: 70%; max-width: 650px; border: 10px solid #8BC34A; box-shadow: 0 0 0 10px #DCEDC8, 0 30px 60px rgba(0,0,0,0.5); position: relative; animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-box::before { content: '🎊'; position: absolute; top: -40px; left: 20px; font-size: 80px; transform: rotate(-20deg); }
+        .modal-box::after { content: '🎉'; position: absolute; top: -40px; right: 20px; font-size: 80px; transform: rotate(20deg); }
+        .modal-title { color: #558B2F; margin: 10px 0; font-size: 48px; text-shadow: 2px 2px 0 #fff; -webkit-text-stroke: 1px #fff; }
+        .modal-action-bar { display: flex; justify-content: center; align-items: center; gap: 30px; margin-top: 10px; }
+        .modal-btn { background: #8BC34A; color: white; padding: 15px 40px; border-radius: 50px; font-size: 28px; border: 4px solid #fff; box-shadow: 0 6px 0 #558B2F; margin: 0; min-width: 200px; }
+        .modal-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #558B2F; }
+        .modal-btn.blue { background: #29B6F6; box-shadow: 0 6px 0 #0277BD; }
+        .modal-btn.blue:active { box-shadow: 0 0 0 #0277BD; }
+
+        ::-webkit-scrollbar { height: 10px; width: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #FFCCBC; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #FF7043; }
+        @keyframes popUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+
+<body>
+    <div class="sky-layer"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="grass"></div></div>
+    <div class="mascot mascot-l">🐼</div><div class="mascot mascot-r">🐱</div>
+
+    <div class="app-container">
+        <div id="screen-main-menu" class="screen" style="display:flex">
+            <div class="menu-title">🎈 連接詞練習 🎈</div>
+            <div class="menu-grid" id="chapter-list"></div>
+        </div>
+
+        <div id="screen-sub-menu" class="screen">
+            <div class="btn back-btn" onmousedown="playClick();showScreen('screen-main-menu')">↩ 返回</div>
+            <div class="menu-title" id="sub-menu-title" style="font-size:48px;margin-bottom:30px;color:#FF7043">...</div>
+            <div class="level-grid" id="level-list"></div>
+        </div>
+
+        <div id="screen-game" class="screen">
+            <div class="btn back-btn" onmousedown="playClick();showScreen('screen-sub-menu')">↩ 退出</div>
+            <div id="game-layout" class="game-layout">
+                <div class="left-panel">
+                    <div class="q-text"><span id="q-text">題目</span><div class="btn sound-btn" onmousedown="playClick();speak(document.getElementById('q-text').innerText)">🔊</div></div>
+                    <img id="q-img" class="q-img" src="">
+                </div>
+                <div class="right-panel">
+                    <div class="answer-area" id="answer-container"></div>
+                    <div class="store-area">
+                        <div class="store-label">🖼️ 圖片貼紙庫</div>
+                        <div class="store-scroll" id="sourceContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="successModal">
+            <div class="modal-box">
+                <div style="font-size:100px; margin-top:-20px">🌟</div>
+                <h2 class="modal-title">太棒了！</h2>
+                <div style="background:#F1F8E9;padding:25px;border-radius:30px;display:flex;align-items:center;justify-content:center;gap:15px;margin-bottom:25px;border:3px dashed #AED581;">
+                    <span id="success-sentence" style="font-size:28px;color:#33691E;font-weight:bold">...</span>
+                    <div class="btn sound-btn" style="width:45px;height:45px;font-size:22px" onmousedown="playClick();speak(document.getElementById('success-sentence').innerText)">🔊</div>
+                </div>
+                <div class="modal-action-bar">
+                    <button class="btn modal-btn blue" onmousedown="playClick();showScreen('screen-sub-menu')">📜 列表</button>
+                    <button class="btn modal-btn" onmousedown="playClick();playNextLevel()">下一關 ➡</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chapters = [
+            {
+                id: "ch1",
+                title: "因為...所以...",
+                icon: "🤔",
+                class: "theme-1",
+                mode: "mode-split",
+                items: [
+                    { label: "因為", key: "reason" },
+                    { label: "所以", key: "result" }
+                ],
+                levels: [
+                    {
+                        title: "故事 1: 肚子痛",
+                        question: { text: "為什麼？", img: "113.png" },
+                        cards: [{ key: "reason", img: "111.png" }, { key: "result", img: "112.png" }],
+                        sentence: "因為吃了太多冰淇淋，所以肚子痛。"
+                    },
+                    {
+                        title: "故事 2: 感冒了",
+                        question: { text: "為什麼？", img: "123.png" },
+                        cards: [{ key: "reason", img: "121.png" }, { key: "result", img: "122.png" }],
+                        sentence: "因為淋雨全身濕透，所以感冒了。"
+                    },
+                    {
+                        title: "故事 3: 蛀牙了",
+                        question: { text: "為什麼？", img: "133.png" },
+                        cards: [{ key: "reason", img: "131.png" }, { key: "result", img: "132.png" }],
+                        sentence: "因為糖果吃太多，所以蛀牙了。"
+                    },
+                    {
+                        title: "故事 4: 髒娃娃",
+                        question: { text: "為什麼？", img: "143.png" },
+                        cards: [{ key: "reason", img: "141.png" }, { key: "result", img: "142.png" }],
+                        sentence: "因為娃娃玩髒了，所以要幫它洗澡。"
+                    }
+                ]
+            },
+            {
+                id: "ch2",
+                title: "雖然...但是...所以...",
+                icon: "🎢",
+                class: "theme-2",
+                mode: "mode-full",
+                items: [
+                    { label: "雖然", key: "step1" },
+                    { label: "但是", key: "step2" },
+                    { label: "所以", key: "step3" }
+                ],
+                levels: [
+                    {
+                        title: "故事 1: 練小提琴",
+                        cards: [{ key: "step1", img: "211.png" }, { key: "step2", img: "212.png" }, { key: "step3", img: "213.png" }],
+                        sentence: "雖然練琴很辛苦，但是我堅持練習，所以得了第一名。"
+                    },
+                    {
+                        title: "故事 2: 吃青菜",
+                        cards: [{ key: "step1", img: "221.png" }, { key: "step2", img: "222.png" }, { key: "step3", img: "223.png" }],
+                        sentence: "雖然我不愛吃菜，但是為了身體健康，所以我把菜吃光光。"
+                    },
+                    {
+                        title: "故事 3: 下雨天",
+                        cards: [{ key: "step1", img: "231.png" }, { key: "step2", img: "232.png" }, { key: "step3", img: "233.png" }],
+                        sentence: "雖然我想出去玩，但是外面下大雨，所以我在家裡玩。"
+                    },
+                    {
+                        title: "故事 4: 生病了",
+                        cards: [{ key: "step1", img: "241.png" }, { key: "step2", img: "242.png" }, { key: "step3", img: "243.png" }],
+                        sentence: "雖然藥很苦，但是想到吃完藥病能好，所以我開心地吃藥。"
+                    }
+                ]
+            },
+            // === 新增：第三章（如果...就...）使用 mode-split 模式 ===
+            {
+                id: "ch3",
+                title: "如果...就...",
+                icon: "💡",
+                class: "theme-3",
+                mode: "mode-split", // 使用第一章的左右分屏模式（共三幅图）
+                items: [
+                    { label: "如果", key: "cond" },
+                    { label: "就", key: "act" }
+                ],
+                levels: [
+                    {
+                        title: "故事 1: 下雨天",
+                        question: { text: "怎麼辦？", img: "313.png" }, // 情境大图
+                        cards: [{ key: "cond", img: "311.png" }, { key: "act", img: "312.png" }],
+                        sentence: "如果下雨了，我就帶雨傘。"
+                    },
+                    {
+                        title: "故事 2: 天氣熱",
+                        question: { text: "怎麼辦？", img: "323.png" },
+                        cards: [{ key: "cond", img: "321.png" }, { key: "act", img: "322.png" }],
+                        sentence: "如果天氣熱，我就吃西瓜。"
+                    },
+                    {
+                        title: "故事 3: 肚子餓",
+                        question: { text: "怎麼辦？", img: "333.png" },
+                        cards: [{ key: "cond", img: "331.png" }, { key: "act", img: "332.png" }],
+                        sentence: "如果肚子餓，我就吃麵包。"
+                    },
+                    {
+                        title: "故事 4: 很累",
+                        question: { text: "怎麼辦？", img: "343.png" },
+                        cards: [{ key: "cond", img: "341.png" }, { key: "act", img: "342.png" }],
+                        sentence: "如果我很累，我就去睡覺。"
+                    }
+                ]
+            }
+        ]; 
+
+        let curCh = 0, curLv = 0, cnt = 0, tgt = 0;
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playClick() {
+            if (ctx.state === 'suspended') ctx.resume();
+            const o = ctx.createOscillator(), g = ctx.createGain();
+            o.type = 'sine';
+            o.frequency.setValueAtTime(600, ctx.currentTime);
+            g.gain.setValueAtTime(0.2, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start();
+            o.stop(ctx.currentTime + 0.15);
+        }
+
+        function playCorrect() {
+            if (ctx.state === 'suspended') ctx.resume();
+            const n = ctx.currentTime;
+            [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+                const o = ctx.createOscillator(), g = ctx.createGain();
+                o.type = 'triangle';
+                o.frequency.value = f;
+                g.gain.setValueAtTime(0.1, n + i * 0.08);
+                g.gain.exponentialRampToValueAtTime(0.001, n + i * 0.08 + 0.5);
+                o.connect(g);
+                g.connect(ctx.destination);
+                o.start(n + i * 0.08);
+                o.stop(n + i * 0.08 + 0.5);
+            });
+        }
+
+        function playWrong() {
+            if (ctx.state === 'suspended') ctx.resume();
+            const o = ctx.createOscillator(), g = ctx.createGain();
+            o.type = 'sawtooth';
+            o.frequency.value = 150;
+            o.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.3);
+            g.gain.setValueAtTime(0.1, ctx.currentTime);
+            g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start();
+            o.stop(ctx.currentTime + 0.3);
+        }
+
+        function speak(t) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(t);
+            u.lang = 'zh-HK';
+            u.rate = 0.9;
+            u.pitch = 1.2;
+            window.speechSynthesis.speak(u);
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            document.getElementById('successModal').style.display = 'none';
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function initMainMenu() {
+            const c = document.getElementById('chapter-list');
+            c.innerHTML = '';
+            chapters.forEach((ch, i) => {
+                const b = document.createElement('div');
+                b.className = `theme-card btn ${ch.class}`;
+                b.innerHTML = `<div class="card-icon">${ch.icon}</div><div class="card-text">${ch.title}</div>`;
+                b.onmousedown = () => { playClick(); openSubMenu(i) };
+                c.appendChild(b);
+            });
+        }
+
+        function openSubMenu(i) {
+            curCh = i;
+            document.getElementById('sub-menu-title').innerText = chapters[i].title;
+            const c = document.getElementById('level-list');
+            c.innerHTML = '';
+            chapters[i].levels.forEach((l, li) => {
+                const b = document.createElement('div');
+                b.className = 'level-btn btn';
+                
+                // === 自動獲取圖片邏輯 ===
+                // 優先使用 question.img，如果沒有則使用第一張卡片
+                const imgSrc = (l.question && l.question.img) ? l.question.img : (l.cards[0] ? l.cards[0].img : '');
+                
+                b.innerHTML = `
+                    <div class="level-num">${li + 1}</div>
+                    <img class="level-thumb" src="${imgSrc}">
+                    <div class="level-name">${l.title.split(': ')[1] || l.title}</div>
+                `;
+                
+                b.onmousedown = () => { playClick(); startGame(li) };
+                c.appendChild(b);
+            });
+            showScreen('screen-sub-menu');
+        }
+
+        function startGame(li) {
+            curLv = li;
+            loadLevel();
+            showScreen('screen-game');
+        }
+
+        function loadLevel() {
+            const ch = chapters[curCh];
+            if (curLv >= ch.levels.length) {
+                alert("完成！");
+                showScreen('screen-sub-menu');
+                return;
+            }
+            const d = ch.levels[curLv], layout = document.getElementById('game-layout');
+            layout.className = `game-layout ${ch.mode}`;
+            
+            if (ch.mode === 'mode-split') {
+                document.getElementById('q-text').innerText = d.question.text;
+                document.getElementById('q-img').src = d.question.img;
+            }
+            
+            const ac = document.getElementById('answer-container');
+            ac.innerHTML = '';
+            ch.items.forEach(it => {
+                const g = document.createElement('div');
+                g.className = 'answer-group';
+                g.innerHTML = `<div class="label-text">${it.label}<div class="btn sound-btn" onmousedown="playClick();speak('${it.label}')">🔊</div></div><div class="drop-zone" data-key="${it.key}" data-label="${it.label}"></div>`;
+                ac.appendChild(g);
+            });
+            
+            const sc = document.getElementById('sourceContainer');
+            sc.innerHTML = '';
+            [...d.cards].sort(() => Math.random() - 0.5).forEach(cd => {
+                const c = document.createElement('div');
+                c.className = 'card btn';
+                c.draggable = true;
+                c.id = 'c-' + Math.random().toString(36).substr(2, 9);
+                c.dataset.key = cd.key;
+                c.innerHTML = `<img src="${cd.img}">`;
+                c.onmousedown = () => playClick();
+                c.addEventListener('dragstart', e => {
+                    e.dataTransfer.setData('key', e.target.dataset.key);
+                    e.dataTransfer.setData('id', e.target.id);
+                    setTimeout(() => e.target.classList.add('dragging'), 0);
+                });
+                c.addEventListener('dragend', e => {
+                    e.target.classList.remove('dragging');
+                });
+                sc.appendChild(c);
+            });
+            
+            cnt = 0;
+            tgt = ch.items.length;
+            document.querySelectorAll('.drop-zone').forEach(z => {
+                z.addEventListener('dragover', e => e.preventDefault());
+                z.addEventListener('dragenter', function (e) {
+                    e.preventDefault();
+                    this.classList.add('highlight');
+                });
+                z.addEventListener('dragleave', function () {
+                    this.classList.remove('highlight');
+                });
+                z.addEventListener('drop', handleDrop);
+            });
+        }
+
+        function handleDrop(e) {
+            this.classList.remove('highlight');
+            if (this.children.length > 0) return;
+            const k = e.dataTransfer.getData('key'), id = e.dataTransfer.getData('id'), c = document.getElementById(id);
+            if (k === this.dataset.key) {
+                this.appendChild(c);
+                this.classList.add('correct');
+                c.draggable = false;
+                c.style.cursor = 'default';
+                playCorrect();
+                cnt++;
+                if (cnt === tgt) {
+                    document.getElementById('success-sentence').innerText = chapters[curCh].levels[curLv].sentence;
+                    setTimeout(() => {
+                        document.getElementById('successModal').style.display = 'flex';
+                        playCorrect();
+                    }, 500);
+                }
+            } else {
+                this.classList.add('wrong');
+                playWrong();
+                setTimeout(() => this.classList.remove('wrong'), 500);
+            }
+        }
+
+        function playNextLevel() {
+            curLv++;
+            loadLevel();
+            document.getElementById('successModal').style.display = 'none';
+        }
+
+        initMainMenu();
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
