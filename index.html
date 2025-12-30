@@ -61,9 +61,7 @@
         
         .menu-grid { display: flex; gap: 15px; width: 95%; justify-content: center; flex-wrap: wrap; overflow-y: auto; padding-bottom: 40px; flex: 1; -webkit-overflow-scrolling: touch; }
         
-        /* ----------------------------------------------------
-           【菜单列表样式】 - 保持之前的放大逻辑
-           ---------------------------------------------------- */
+        /* 菜单列表样式 */
         .theme-card { 
             flex: 0 0 45%; 
             max-width: 200px; 
@@ -75,7 +73,7 @@
             margin-bottom: 10px; 
         }
 
-        /* iPad / 平板大屏专属放大 */
+        /* iPad / 平板大屏专属放大菜单 */
         @media (min-width: 768px) {
             .theme-card {
                 flex: 0 0 30%;       
@@ -108,10 +106,6 @@
         }
         @media (min-width: 768px) { .game-layout { flex-direction: row; } }
 
-        /* ----------------------------------------------------
-           【核心调整：左右比例重构 (iPad)】
-           ---------------------------------------------------- */
-        
         /* 左侧题目图 */
         .left-panel { 
             flex: 1.2; display: flex; flex-direction: row; 
@@ -122,10 +116,10 @@
             transition: all 0.3s;
         }
 
-        /* iPad 上：左侧变窄，高度变高 */
+        /* iPad 上：左侧变窄 */
         @media (min-width: 768px) { 
             .left-panel { 
-                flex: 0.45; /* 核心修改：从 1 改为 0.45 (变窄) */
+                flex: 0.45; 
                 flex-direction: column; 
                 max-height: none; 
                 padding: 10px; 
@@ -150,13 +144,7 @@
 
         /* 右侧面板 */
         .right-panel { flex: 2; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
-        
-        /* iPad 上：右侧变宽，占据更多空间 */
-        @media (min-width: 768px) { 
-            .right-panel { 
-                flex: 1; /* 自动占据剩余空间 (约 70%) */
-            } 
-        }
+        @media (min-width: 768px) { .right-panel { flex: 1; } }
 
         /* 答题区 */
         .answer-area { 
@@ -194,21 +182,18 @@
         .drop-zone.correct { background: #fff; border: 0; }
         .drop-zone .card { position: absolute !important; width: 100% !important; height: 100% !important; border: 0 !important; }
 
-        /* ----------------------------------------------------
-           【贴纸库巨型化 (iPad Only)】
-           ---------------------------------------------------- */
+        /* 贴纸库 (通用) */
         .store-area { 
             height: 180px; 
             background: #FFF9C4; border-radius: 15px; border: 4px solid #FBC02D; 
             display: flex; flex-direction: column; position: relative; padding: 5px; 
             flex-shrink: 0;
         }
+        
+        /* iPad 巨型贴纸库 (第一、三章) */
         @media (min-width: 768px) { 
             .store-area { 
-                /* 核心修改：既然右边宽了，高度拉得更满 */
-                height: 45vh; 
-                min-height: 350px; 
-                padding: 15px;
+                height: 45vh; min-height: 350px; padding: 15px;
             } 
         }
 
@@ -246,6 +231,39 @@
             .game-layout.mode-full .answer-area { flex-wrap: wrap; align-content: center; }
             .game-layout.mode-full .answer-group { flex: 0 0 45%; height: 45%; }
             .game-layout.mode-full .answer-group:nth-child(3) { flex: 0 0 90%; }
+        }
+
+        /* =========================================
+           【手机端第二章 (Mode Full) 专属优化】
+           目标：贴纸库拉高，平铺展示3张图，禁止横向滚动
+           ========================================= */
+        @media (max-width: 767px) {
+            /* 1. 贴纸库容器：稍微拉高，去掉固定像素限制 */
+            .game-layout.mode-full .store-area {
+                height: auto;
+                flex: 0 0 22vh; /* 占据屏幕高度的 22% */
+                padding: 8px 2px;
+            }
+
+            /* 2. 滚动区域：改为弹性换行布局 */
+            .game-layout.mode-full .store-scroll {
+                display: flex;
+                flex-wrap: wrap;           /* 允许换行 */
+                justify-content: space-evenly; /* 均匀分布 */
+                align-items: center;
+                overflow-x: hidden;        /* 彻底关掉横向滚动条 */
+                padding: 0;
+                gap: 0;
+            }
+
+            /* 3. 卡片：强制宽度 30%，这样一行刚好塞下3张 */
+            .game-layout.mode-full .store-scroll .card {
+                width: 30%;                /* 核心：3张占 90% 宽 */
+                height: auto;              /* 高度自动适应 */
+                aspect-ratio: 1/1;         /* 保持正方形 */
+                flex: none;                /* 禁止 flex 自动计算大小 */
+                margin: 0;
+            }
         }
 
         /* 弹窗 */
@@ -630,3 +648,4 @@
 </body>
 
 </html>
+
