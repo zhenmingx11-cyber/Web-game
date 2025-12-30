@@ -71,12 +71,14 @@
         .level-thumb { width: 100px; height: 100px; min-width: 100px; min-height: 100px; border-radius: 12px; object-fit: cover; border: 2px solid #AED581; background: #fff; flex-shrink: 0; }
         .level-name { font-size: 20px; color: #555; font-weight: bold; }
 
+        /* ================= 游戏布局 ================= */
         .game-layout { 
             display: flex; width: 100%; height: 100%; padding: 10px; 
             flex-direction: column; gap: 10px; overflow: hidden; 
         }
         @media (min-width: 768px) { .game-layout { flex-direction: row; } }
 
+        /* 左侧题目图 */
         .left-panel { 
             flex: 1.2; display: flex; flex-direction: row; 
             background: #E1F5FE; border-radius: 15px; border: 3px solid #fff; 
@@ -95,12 +97,19 @@
             width: auto; height: 100%; max-width: 85%; 
             object-fit: contain; background: #fff;
             
-            /* 关键代码：禁止一切鼠标/触摸交互 */
+            /* CSS级禁止 */
             pointer-events: none; 
             -webkit-user-drag: none; 
             user-select: none;
+            touch-action: none;
         }
-        @media (min-width: 768px) { .q-img { width: 100%; height: 100%; max-width: none; border-radius: 10px; } }
+        @media (min-width: 768px) { 
+            .q-img { 
+                width: 100%; height: 100%; max-width: none; border-radius: 10px; 
+                /* 针对 iPad 第一三章的特大显示 */
+                max-height: 50vh; 
+            } 
+        }
 
         .right-panel { flex: 2; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
         @media (min-width: 768px) { .right-panel { flex: 1; } }
@@ -110,8 +119,12 @@
             display: flex; align-items: center; justify-content: space-around; padding: 5px; 
         }
 
+        /* ----------------------------------------------------
+           【核心修复：放置区尺寸 - 区分章节】
+           ---------------------------------------------------- */
         .drop-zone {
             width: auto; height: auto;
+            /* 手机默认 */
             min-width: 85px; min-height: 85px;
             max-width: 15vh; max-height: 15vh;
             aspect-ratio: 1/1; 
@@ -119,14 +132,19 @@
             display: flex; justify-content: center; align-items: center;
             position: relative; flex-shrink: 0; overflow: hidden;
         }
+
+        /* iPad 适配 */
         @media (min-width: 768px) {
+            /* 默认情况（第一、三章）：超级大 */
             .drop-zone {
-                min-width: 20vh; min-height: 20vh;
+                min-width: 28vh; min-height: 28vh; /* 从20加大到28 */
                 max-width: none; max-height: none;
-                border-width: 4px;
+                border-width: 5px;
             }
+            
+            /* 第二章（全屏模式）：保持适中，因为有3个 */
             .game-layout.mode-full .drop-zone {
-                min-width: 25vh; min-height: 25vh;
+                min-width: 22vh; min-height: 22vh; /* 稍微控制一下 */
             }
         }
 
@@ -205,10 +223,10 @@
         <div id="screen-game" class="screen" style="padding-top: 0;">
             <div class="btn back-btn" onclick="playClick();showScreen('screen-sub-menu')" style="z-index: 200;">↩ 退出</div>
             <div id="game-layout" class="game-layout">
-                <!-- 左侧题目区：HTML中加了draggable="false" 双保险 -->
+                <!-- 左侧题目区：HTML级禁用拖拽 ondragstart="return false;" -->
                 <div class="left-panel" id="panel-question">
                     <div class="q-text"><span id="q-text">題目</span><div class="btn sound-btn" onclick="playClick();speak(document.getElementById('q-text').innerText)">🔊</div></div>
-                    <img id="q-img" class="q-img" src="" draggable="false">
+                    <img id="q-img" class="q-img" src="" draggable="false" ondragstart="return false;" oncontextmenu="return false;">
                 </div>
                 <div class="right-panel">
                     <div class="answer-area" id="answer-container"></div>
@@ -461,7 +479,6 @@
             layout.className = 'game-layout';
             if (ch.mode) layout.classList.add(ch.mode);
 
-            // 核心修复：JS强制控制左侧显隐
             const leftPanel = document.getElementById('panel-question');
             if (ch.mode === 'mode-full') {
                 leftPanel.style.display = 'none';
