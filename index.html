@@ -94,6 +94,48 @@
         .theme-7 { border-color: #26A69A; background: radial-gradient(circle at 50% 30%, #E0F2F1, #fff); box-shadow: 0 5px 0 #00796B; }
         .theme-8 { border-color: #FF7043; background: radial-gradient(circle at 50% 30%, #FBE9E7, #fff); box-shadow: 0 5px 0 #D84315; }
 
+        /* 新增：右下角悬浮按钮样式 (FAB) */
+        .random-fab {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD54F 0%, #FFB300 100%);
+            border: 4px solid #fff;
+            box-shadow: 0 6px 15px rgba(255, 160, 0, 0.4);
+            z-index: 200; /* 确保浮在最上层 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: popIn 0.6s ease-out;
+        }
+
+        .random-fab:active {
+            transform: scale(0.9) translateY(2px);
+            box-shadow: 0 2px 5px rgba(255, 160, 0, 0.4);
+        }
+
+        .random-fab .icon { font-size: 32px; line-height: 1; margin-bottom: 2px; text-shadow: 0 2px 0 rgba(0,0,0,0.1); }
+        .random-fab .text { font-size: 12px; font-weight: 900; color: #E65100; }
+
+        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* 平板大屏调整 */
+        @media (min-width: 768px) {
+            .random-fab {
+                width: 90px;
+                height: 90px;
+                bottom: 30px;
+                right: 30px;
+            }
+            .random-fab .icon { font-size: 40px; }
+            .random-fab .text { font-size: 16px; }
+        }
+
         .card-icon { font-size: 50px; margin-bottom: 10px; }
         .card-text { font-size: 22px; color: #546E7A; font-weight: 900; }
 
@@ -105,86 +147,31 @@
         .level-thumb { width: 100px; height: 100px; min-width: 100px; min-height: 100px; border-radius: 12px; object-fit: cover; border: 2px solid #AED581; background: #fff; flex-shrink: 0; }
         .level-name { font-size: 20px; color: #555; font-weight: bold; }
 
-        /* iPad 放大选关图片 */
         @media (min-width: 768px) {
             .level-thumb { width: 180px; height: 180px; min-width: 180px; min-height: 180px; }
             .level-name { font-size: 32px; }
             .level-num { width: 60px; height: 60px; font-size: 30px; }
         }
 
-        /* ================= 游戏核心布局 ================= */
-        .game-layout { 
-            display: flex; width: 100%; height: 100%; padding: 10px; 
-            flex-direction: column; gap: 10px; overflow: hidden; 
-        }
+        .game-layout { display: flex; width: 100%; height: 100%; padding: 10px; flex-direction: column; gap: 10px; overflow: hidden; }
         @media (min-width: 768px) { .game-layout { flex-direction: row; } }
 
-        /* 左侧题目图 */
-        .left-panel { 
-            flex: 1.2; display: flex; flex-direction: row; 
-            background: #E1F5FE; border-radius: 15px; border: 3px solid #fff; 
-            box-shadow: 0 4px 0 #81D4FA; padding: 0;
-            align-items: center; justify-content: center; 
-            max-height: 30vh; overflow: hidden;
-            transition: all 0.3s;
-        }
-
-        @media (min-width: 768px) { 
-            .left-panel { 
-                flex: 0.45; 
-                flex-direction: column; 
-                max-height: none; 
-                padding: 10px; 
-            } 
-        }
+        .left-panel { flex: 1.2; display: flex; flex-direction: row; background: #E1F5FE; border-radius: 15px; border: 3px solid #fff; box-shadow: 0 4px 0 #81D4FA; padding: 0; align-items: center; justify-content: center; max-height: 30vh; overflow: hidden; transition: all 0.3s; }
+        @media (min-width: 768px) { .left-panel { flex: 0.45; flex-direction: column; max-height: none; padding: 10px; } }
 
         .q-text { font-size: 20px; color: #01579B; margin: 0 5px; font-weight: 900; flex-shrink: 0; writing-mode: vertical-rl; text-orientation: upright; z-index: 2; }
         @media (min-width: 768px) { .q-text { writing-mode: horizontal-tb; font-size: 32px; margin-bottom: 10px; } }
 
-        .q-img { 
-            width: auto; height: 100%; max-width: 85%; 
-            object-fit: contain; background: #fff;
-            pointer-events: none; -webkit-user-drag: none; user-select: none; touch-action: none;
-        }
-        @media (min-width: 768px) { 
-            .q-img { 
-                width: 100%; height: 100%; max-width: none; border-radius: 10px; 
-                max-height: 50vh; 
-            } 
-        }
+        .q-img { width: auto; height: 100%; max-width: 85%; object-fit: contain; background: #fff; pointer-events: none; -webkit-user-drag: none; user-select: none; touch-action: none; }
+        @media (min-width: 768px) { .q-img { width: 100%; height: 100%; max-width: none; border-radius: 10px; max-height: 50vh; } }
 
-        /* 右侧面板 */
         .right-panel { flex: 2; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
         @media (min-width: 768px) { .right-panel { flex: 1; } }
 
-        /* 答题区 */
-        .answer-area { 
-            flex: 1; 
-            background: #fff; border-radius: 15px; border: 3px dashed #FFAB91; 
-            display: flex; align-items: center; justify-content: space-around; padding: 5px; 
-            flex-shrink: 1; 
-        }
+        .answer-area { flex: 1; background: #fff; border-radius: 15px; border: 3px dashed #FFAB91; display: flex; align-items: center; justify-content: space-around; padding: 5px; flex-shrink: 1; }
 
-        /* 放置区 (Drop Zone) */
-        .drop-zone {
-            width: auto; height: auto;
-            min-width: 85px; min-height: 85px; max-width: 15vh; max-height: 15vh;
-            aspect-ratio: 1/1; 
-            background: #F5F5F5; border: 3px dashed var(--zone-border); border-radius: 12px;
-            display: flex; justify-content: center; align-items: center;
-            position: relative; flex-shrink: 0; overflow: hidden;
-        }
-
-        @media (min-width: 768px) {
-            .drop-zone {
-                min-width: 28vh; min-height: 28vh; 
-                max-width: none; max-height: none;
-                border-width: 5px;
-            }
-            .game-layout.mode-full .drop-zone {
-                min-width: 22vh; min-height: 22vh;
-            }
-        }
+        .drop-zone { width: auto; height: auto; min-width: 85px; min-height: 85px; max-width: 15vh; max-height: 15vh; aspect-ratio: 1/1; background: #F5F5F5; border: 3px dashed var(--zone-border); border-radius: 12px; display: flex; justify-content: center; align-items: center; position: relative; flex-shrink: 0; overflow: hidden; }
+        @media (min-width: 768px) { .drop-zone { min-width: 28vh; min-height: 28vh; max-width: none; max-height: none; border-width: 5px; } .game-layout.mode-full .drop-zone { min-width: 22vh; min-height: 22vh; } }
 
         .drop-zone::before { content: attr(data-label); color: #E0E0E0; font-size: 20px; font-weight: 900; position: absolute; }
         @media (min-width: 768px) { .drop-zone::before { font-size: 30px; } }
@@ -192,82 +179,31 @@
         .drop-zone.correct { background: #fff; border: 0; }
         .drop-zone .card { position: absolute !important; width: 100% !important; height: 100% !important; border: 0 !important; }
 
-        /* 贴纸库 */
-        .store-area { 
-            height: 180px; 
-            background: #FFF9C4; border-radius: 15px; border: 4px solid #FBC02D; 
-            display: flex; flex-direction: column; position: relative; padding: 5px; 
-            flex-shrink: 0;
-        }
-        
-        @media (min-width: 768px) { 
-            .store-area { 
-                height: 45vh; min-height: 350px; padding: 15px;
-            } 
-        }
+        .store-area { height: 180px; background: #FFF9C4; border-radius: 15px; border: 4px solid #FBC02D; display: flex; flex-direction: column; position: relative; padding: 5px; flex-shrink: 0; }
+        @media (min-width: 768px) { .store-area { height: 45vh; min-height: 350px; padding: 15px; } }
 
         .store-label { position: absolute; top: -12px; left: 10px; background: #FBC02D; color: #fff; padding: 2px 10px; border-radius: 10px; font-size: 14px; font-weight: 900; z-index: 5; }
-        
-        .store-scroll { 
-            display: flex; align-items: center; gap: 15px; width: 100%; height: 100%; 
-            overflow-x: auto; overflow-y: hidden; flex-wrap: nowrap;
-            padding: 10px 5px; -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
-        }
+        .store-scroll { display: flex; align-items: center; gap: 15px; width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden; flex-wrap: nowrap; padding: 10px 5px; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
 
-        .card {
-            height: 90%; aspect-ratio: 1/1; 
-            flex-shrink: 0; 
-            background: #fff; border-radius: 12px; border: 2px solid #fff; padding: 0; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-            touch-action: none; 
-        }
-        @media (min-width: 768px) {
-            .card { height: 95%; border-radius: 20px; border: 4px solid #fff; }
-        }
+        .card { height: 90%; aspect-ratio: 1/1; flex-shrink: 0; background: #fff; border-radius: 12px; border: 2px solid #fff; padding: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none; }
+        @media (min-width: 768px) { .card { height: 95%; border-radius: 20px; border: 4px solid #fff; } }
         .card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; background: #f0f0f0; }
 
         .answer-group { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; height: 100%; justify-content: center; }
         .label-text { font-size: 20px; color: #FF7043; font-weight: 900; margin-bottom: 2px; }
         @media (min-width: 768px) { .label-text { font-size: 28px; } }
 
-        /* 特殊模式 */
         .game-layout.mode-full .left-panel { display: none !important; }
         .game-layout.mode-full .right-panel { flex: 1; }
         .game-layout.mode-full .answer-area { flex-direction: row; }
+        @media (max-width: 767px) { .game-layout.mode-full .answer-area { flex-wrap: wrap; align-content: center; } .game-layout.mode-full .answer-group { flex: 0 0 45%; height: 45%; } .game-layout.mode-full .answer-group:nth-child(3) { flex: 0 0 90%; } }
+
         @media (max-width: 767px) {
-            .game-layout.mode-full .answer-area { flex-wrap: wrap; align-content: center; }
-            .game-layout.mode-full .answer-group { flex: 0 0 45%; height: 45%; }
-            .game-layout.mode-full .answer-group:nth-child(3) { flex: 0 0 90%; }
+            .game-layout.mode-full .store-area { height: auto; flex: 0 0 22vh; padding: 8px 2px; }
+            .game-layout.mode-full .store-scroll { display: flex; flex-wrap: wrap; justify-content: space-evenly; align-items: center; overflow-x: hidden; padding: 0; gap: 0; }
+            .game-layout.mode-full .store-scroll .card { width: 30%; height: auto; aspect-ratio: 1/1; flex: none; margin: 0; }
         }
 
-        /* 手机端全屏模式优化 */
-        @media (max-width: 767px) {
-            .game-layout.mode-full .store-area {
-                height: auto;
-                flex: 0 0 22vh; 
-                padding: 8px 2px;
-            }
-            .game-layout.mode-full .store-scroll {
-                display: flex;
-                flex-wrap: wrap;           
-                justify-content: space-evenly; 
-                align-items: center;
-                overflow-x: hidden;        
-                padding: 0;
-                gap: 0;
-            }
-            .game-layout.mode-full .store-scroll .card {
-                width: 30%;                
-                height: auto;              
-                aspect-ratio: 1/1;         
-                flex: none;                
-                margin: 0;
-            }
-        }
-
-        /* 弹窗 */
         .modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 500; display: none; justify-content: center; align-items: center; }
         .modal-box { background: #fff; padding: 20px; border-radius: 20px; text-align: center; width: 80%; max-width: 400px; border: 6px solid #8BC34A; }
         .modal-action-bar { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
@@ -282,6 +218,7 @@
         <div id="screen-main-menu" class="screen" style="display:flex">
             <div class="menu-title">🎈 連接詞練習 🎈</div>
             <div class="menu-grid" id="chapter-list"></div>
+            <!-- 这里是通过JS动态插入随机按钮的容器 -->
         </div>
         <div id="screen-sub-menu" class="screen">
             <div class="btn back-btn" onclick="playClick();showScreen('screen-main-menu')">↩ 返回</div>
@@ -289,7 +226,7 @@
             <div class="level-grid" id="level-list"></div>
         </div>
         <div id="screen-game" class="screen" style="padding-top: 0;">
-            <div class="btn back-btn" onclick="playClick();showScreen('screen-sub-menu')" style="z-index: 200;">↩ 退出</div>
+            <div class="btn back-btn" onclick="playClick();quitGame()" style="z-index: 200;">↩ 退出</div>
             <div id="game-layout" class="game-layout">
                 <div class="left-panel" id="panel-question">
                     <div class="q-text"><span id="q-text">題目</span><div class="btn sound-btn" onclick="playClick();speak(document.getElementById('q-text').innerText)">🔊</div></div>
@@ -312,7 +249,7 @@
                     <div class="btn sound-btn" onclick="playClick();speak(document.getElementById('success-sentence').innerText)">🔊</div>
                 </div>
                 <div class="modal-action-bar">
-                    <button class="btn modal-btn blue" style="background:#29B6F6;box-shadow:0 3px 0 #0277BD" onclick="playClick();showScreen('screen-sub-menu')">📜 列表</button>
+                    <button class="btn modal-btn blue" style="background:#29B6F6;box-shadow:0 3px 0 #0277BD" onclick="playClick();quitGame()">📜 列表</button>
                     <button class="btn modal-btn" onclick="playClick();playNextLevel()">下一關 ➡</button>
                 </div>
             </div>
@@ -323,6 +260,7 @@
         const chapters = [
             {
                 id: "ch1",
+                folder: "ch1",
                 title: "因為...所以...",
                 icon: "🤔",
                 class: "theme-1",
@@ -360,6 +298,7 @@
             },
             {
                 id: "ch2",
+                folder: "ch2",
                 title: "雖然...但是...所以...",
                 icon: "🎢",
                 class: "theme-2",
@@ -394,6 +333,7 @@
             },
             {
                 id: "ch3",
+                folder: "ch3",
                 title: "如果...就...",
                 icon: "💡",
                 class: "theme-3",
@@ -429,8 +369,9 @@
                     }
                 ]
             },
-            {
+                 {
                 id: "ch4",
+                folder: "ch4",
                 title: "之所以...是因為...",
                 icon: "🕵️", 
                 class: "theme-4",
@@ -440,7 +381,7 @@
                 ],
                 levels: [
                     {
-                        title: "遲到之謎",
+                        title: "遲到",
                         question: { text: "之所以遲到...", img: "迟到_题目.png" }, 
                         cards: [
                             { key: "cause", img: "迟到_是因为.png" }, 
@@ -449,36 +390,28 @@
                         sentence: "之所以遲到，是因為鬧鐘壞了。"
                     },
                     {
-                        title: "冠軍之謎",
-                        question: { text: "之所以奪冠...", img: "冠军_题目.png" }, 
+                        title: "拼圖",
+                        question: { text: "之所以拼不完...", img: "拼图_题目.png" }, 
                         cards: [
-                            { key: "cause", img: "冠军_是因为.png" }, 
-                            { key: "wrong1", img: "冠军_错误.png" } 
+                            { key: "cause", img: "拼图_是因为.png" }, 
+                            { key: "wrong1", img: "拼图_错误.png" } 
                         ],
-                        sentence: "之所以得冠軍，是因為天天練習。"
+                        sentence: "之所以拼不完，是因為丟了一塊拼圖。"
                     },
                     {
-                        title: "變胖之謎",
-                        question: { text: "之所以變胖...", img: "变胖_题目.png" }, 
+                        title: "鞋子濕",
+                        question: { text: "之所以濕...", img: "鞋子湿_题目.png" }, 
                         cards: [
-                            { key: "cause", img: "变胖_是因为.png" }, 
-                            { key: "wrong1", img: "变胖_错误.png" }  
+                            { key: "cause", img: "鞋子湿_是因为.png" }, 
+                            { key: "wrong1", img: "鞋子湿_错误.png" }  
                         ],
-                        sentence: "之所以變胖了，是因為吃太多糖果。"
-                    },
-                    {
-                        title: "全身濕透",
-                        question: { text: "之所以濕透...", img: "淋湿_题目.png" }, 
-                        cards: [
-                            { key: "cause", img: "淋湿_是因为.png" }, 
-                            { key: "wrong1", img: "淋湿_错误.png" }  
-                        ],
-                        sentence: "之所以全身濕透，是因為沒帶雨傘。"
+                        sentence: "之所以鞋子濕了，是因為踩到水坑。"
                     }
                 ]
             },
             {
                 id: "ch5",
+                folder: "ch5",
                 title: "無論...都...",
                 icon: "🌋", 
                 class: "theme-5",
@@ -499,87 +432,40 @@
                         sentence: "無論下雨還是下雪，我都要去上學。"
                     },
                     {
-                        title: "愛好",
+                        title: "吃蔬菜",
                         cards: [
-                            { key: "cond", img: "爱好_无论唱.png" },   
-                            { key: "cond", img: "爱好_无论跳.png" },  
-                            { key: "result", img: "爱好_都.png" }  
+                            { key: "cond", img: "蔬菜_无论红.png" },   
+                            { key: "cond", img: "蔬菜_无论绿.png" },  
+                            { key: "result", img: "蔬菜_都.png" }  
                         ],
-                        sentence: "無論唱歌還是跳舞，我都覺得很開心。"
+                        sentence: "無論紅色的還是綠色的，蔬菜我都要吃。"
                     },
                     {
-                        title: "愛乾淨",
+                        title: "小狗",
                         cards: [
-                            { key: "cond", img: "卫生_无论手.png" },    
-                            { key: "cond", img: "卫生_无论脸.png" },    
-                            { key: "result", img: "卫生_都.png" }  
+                            { key: "cond", img: "狗_无论跑.png" },    
+                            { key: "cond", img: "狗_无论静.png" },    
+                            { key: "result", img: "狗_都.png" }  
                         ],
-                        sentence: "無論洗手還是洗臉，都要用毛巾擦乾。"
+                        sentence: "無論小狗是安靜的還是活潑的，我都喜歡和它玩。"
                     },
                     {
-                        title: "好習慣",
+                        title: "畫畫",
                         cards: [
-                            { key: "cond", img: "刷牙_无论早.png" }, 
-                            { key: "cond", img: "刷牙_无论晚.png" },   
-                            { key: "result", img: "刷牙_都.png" }  
+                            { key: "cond", img: "画_无论画.png" }, 
+                            { key: "cond", img: "画_无论写.png" },   
+                            { key: "result", img: "画_都.png" }  
                         ],
-                        sentence: "無論早上還是晚上，我都要刷牙。"
+                        sentence: "無論畫畫還是寫字，我都認真完成。"
                     }
                 ]
             },
             {
                 id: "ch6",
-                title: "...是...",
-                icon: "📘", 
-                class: "theme-6",
-                mode: "mode-split",
-                items: [
-                    { label: "是", key: "attr" } 
-                ],
-                levels: [
-                    {
-                        title: "顏色",
-                        question: { text: "太陽...", img: "太阳_题目.png" }, 
-                        cards: [
-                            { key: "attr", img: "太阳_是.png" },   
-                            { key: "wrong", img: "太阳_错误.png" }  
-                        ],
-                        sentence: "太陽是紅色的。"
-                    },
-                    {
-                        title: "形狀",
-                        question: { text: "輪胎...", img: "轮胎_题目.png" }, 
-                        cards: [
-                            { key: "attr", img: "轮胎_是.png" }, 
-                            { key: "wrong", img: "轮胎_错误.png" } 
-                        ],
-                        sentence: "汽車的輪胎是圓形的。"
-                    },
-                    {
-                        title: "味道",
-                        question: { text: "檸檬...", img: "柠檬_题目.png" }, 
-                        cards: [
-                            { key: "attr", img: "柠檬_是.png" },  
-                            { key: "wrong", img: "柠檬_错误.png" } 
-                        ],
-                        sentence: "檸檬是酸的。"
-                    },
-                    {
-                        title: "溫度",
-                        question: { text: "冰塊...", img: "冰块_题目.png" }, 
-                        cards: [
-                            { key: "attr", img: "冰块_是.png" },  
-                            { key: "wrong", img: "冰块_错误.png" }  
-                        ],
-                        sentence: "冰塊是冰冰涼涼的。"
-                    }
-                ]
-            },
-            {
-                id: "ch7",
+                folder: "ch6",
                 title: "只要...就...",
                 icon: "🔑", 
-                class: "theme-7",
+                class: "theme-6",
                 mode: "mode-split",
                 items: [
                     { label: "只要", key: "cond" },
@@ -596,39 +482,40 @@
                         sentence: "只要按下開關，燈就會亮。"
                     },
                     {
-                        title: "植物",
-                        question: { text: "怎麼做？", img: "种花_题目.png" }, 
+                        title: "澆花",
+                        question: { text: "怎麼做？", img: "浇花_题目.png" }, 
                         cards: [
-                            { key: "cond", img: "种花_只要.png" },  
-                            { key: "res", img: "种花_就.png" }   
+                            { key: "cond", img: "浇花_只要.png" },  
+                            { key: "res", img: "浇花_就.png" }   
                         ],
                         sentence: "只要澆水，花就會長大。"
                     },
                     {
-                        title: "努力",
-                        question: { text: "想考好？", img: "读书_题目.png" }, 
+                        title: "開門",
+                        question: { text: "怎麼做？", img: "开门_题目.png" }, 
                         cards: [
-                            { key: "cond", img: "读书_只要.png" }, 
-                            { key: "res", img: "读书_就.png" }     
+                            { key: "cond", img: "开门_只要.png" }, 
+                            { key: "res", img: "开门_就.png" }    
                         ],
-                        sentence: "只要努力讀書，就會考一百分。"
+                        sentence: "只要輕輕敲門，朋友就會來開門。"
                     },
                     {
-                        title: "進場",
-                        question: { text: "想進去？", img: "进场_题目.png" }, 
+                        title: "開鎖",
+                        question: { text: "怎麼做？", img: "开锁_题目.png" }, 
                         cards: [
-                            { key: "cond", img: "进场_只要.png" }, 
-                            { key: "res", img: "进场_就.png" }     
+                            { key: "cond", img: "开锁_只要.png" }, 
+                            { key: "res", img: "开锁_就.png" }    
                         ],
-                        sentence: "只要買票，就能進去玩。"
+                        sentence: "只要有鑰匙，就能打開鎖。"
                     }
                 ]
             },
             {
-                id: "ch8",
+                id: "ch7",
+                folder: "ch7",
                 title: "不是...而是...",
                 icon: "🙅", 
-                class: "theme-8",
+                class: "theme-7",
                 mode: "mode-split",
                 items: [
                     { label: "不是", key: "not" },
@@ -645,31 +532,31 @@
                         sentence: "這不是蛇，而是一條繩子。"
                     },
                     {
-                        title: "狗狗",
-                        question: { text: "這是？", img: "狗_题目.png" }, 
+                        title: "雲彩",
+                        question: { text: "這是？", img: "云_题目.png" }, 
                         cards: [
-                            { key: "not", img: "狗_不是.png" },  
-                            { key: "is", img: "狗_而是.png" }     
+                            { key: "not", img: "云_不是.png" },  
+                            { key: "is", img: "云_而是.png" }     
                         ],
-                        sentence: "這不是狼，而是哈士奇。"
+                        sentence: "這不是棉花糖，而是雲彩。"
                     },
                     {
-                        title: "水果",
-                        question: { text: "這是？", img: "番茄_题目.png" }, 
+                        title: "玩具",
+                        question: { text: "這是？", img: "玩具_题目.png" }, 
                         cards: [
-                            { key: "not", img: "番茄_不是.png" }, 
-                            { key: "is", img: "番茄_而是.png" }     
+                            { key: "not", img: "玩具_不是.png" }, 
+                            { key: "is", img: "玩具_而是.png" }     
                         ],
-                        sentence: "這不是蘋果，而是番茄。"
+                        sentence: "這不是真車，而是玩具車。"
                     },
                     {
-                        title: "飛機",
-                        question: { text: "天上？", img: "飞机_题目.png" }, 
+                        title: "畫筆",
+                        question: { text: "這是？", img: "笔_题目.png" }, 
                         cards: [
-                            { key: "not", img: "飞机_不是.png" },  
-                            { key: "is", img: "飞机_而是.png" }   
+                            { key: "not", img: "笔_不是.png" },  
+                            { key: "is", img: "笔_而是.png" }   
                         ],
-                        sentence: "這不是小鳥，而是飛機。"
+                        sentence: "這不是筷子，而是畫筆。"
                     }
                 ]
             }
@@ -746,6 +633,8 @@
                 b.onclick = () => { playClick(); openSubMenu(i) };
                 c.appendChild(b);
             });
+            // 确保随机按钮在菜单初始化后添加
+            addRandomButton();
         }
 
         function openSubMenu(i) {
@@ -757,9 +646,7 @@
                 const b = document.createElement('div');
                 b.className = 'level-btn btn';
                 const imgSrc = (l.question && l.question.img) ? l.question.img : (l.cards[0] ? l.cards[0].img : '');
-                
-                // 图片路径：images/文件名
-                const fullPath = `images/${imgSrc}`;
+                const fullPath = `images/${chapters[i].folder}/${imgSrc}`;
 
                 b.innerHTML = `
                     <div class="level-num">${li + 1}</div>
@@ -780,7 +667,7 @@
 
         function loadLevel() {
             const ch = chapters[curCh];
-            if (curLv >= ch.levels.length) {
+            if (curLv >= ch.levels.length && !isRandomMode) {
                 alert("完成！");
                 showScreen('screen-sub-menu');
                 return;
@@ -788,9 +675,7 @@
             const d = ch.levels[curLv], layout = document.getElementById('game-layout');
             layout.className = 'game-layout';
             if (ch.mode) layout.classList.add(ch.mode);
-            
-            // 图片文件夹
-            const folderPath = `images/`;
+            const folderPath = `images/${ch.folder}/`;
 
             const leftPanel = document.getElementById('panel-question');
             if (ch.mode === 'mode-full') {
@@ -879,10 +764,82 @@
             }
         }
 
+        // --- 新增功能：随机闯关模式 ---
+
+        let isRandomMode = false;
+        let randomQueue = []; 
+
+        function addRandomButton() {
+            const parent = document.getElementById('screen-main-menu');
+            if(document.getElementById('random-btn-fab')) return; 
+
+            const b = document.createElement('div');
+            b.id = 'random-btn-fab';
+            b.className = 'btn random-fab';
+            b.innerHTML = `<div class="icon">🎲</div><div class="text">隨機</div>`;
+            b.onclick = () => { playClick(); startRandomMode(); };
+            
+            parent.appendChild(b);
+        }
+
+        function startRandomMode() {
+            isRandomMode = true;
+            randomQueue = [];
+            
+            chapters.forEach((ch, cIdx) => {
+                ch.levels.forEach((lv, lIdx) => {
+                    randomQueue.push({c: cIdx, l: lIdx});
+                });
+            });
+
+            for (let i = randomQueue.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [randomQueue[i], randomQueue[j]] = [randomQueue[j], randomQueue[i]];
+            }
+
+            console.log("随机队列已生成，共 " + randomQueue.length + " 关");
+            playNextRandomLevel();
+        }
+
+        function playNextRandomLevel() {
+            if (randomQueue.length === 0) {
+                alert("太厲害了！你已經通關了所有題目！🎉");
+                quitGame();
+                return;
+            }
+
+            const nextLevel = randomQueue.pop(); 
+            curCh = nextLevel.c;
+            curLv = nextLevel.l; 
+            
+            loadLevel(); 
+            showScreen('screen-game');
+        }
+
         function playNextLevel() {
-            curLv++;
-            loadLevel();
             document.getElementById('successModal').style.display = 'none';
+            
+            if (isRandomMode) {
+                playNextRandomLevel();
+            } else {
+                if (curLv + 1 < chapters[curCh].levels.length) {
+                    curLv++;
+                    loadLevel();
+                } else {
+                    alert("本章節已完成！👏");
+                    showScreen('screen-sub-menu');
+                }
+            }
+        }
+
+        function quitGame() {
+            document.getElementById('successModal').style.display = 'none';
+            if (isRandomMode) {
+                isRandomMode = false;
+                showScreen('screen-main-menu'); 
+            } else {
+                showScreen('screen-sub-menu'); 
+            }
         }
 
         initMainMenu();
@@ -890,4 +847,5 @@
 </body>
 
 </html>
+
 
