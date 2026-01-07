@@ -76,7 +76,7 @@
         /* iPad / 平板大屏专属放大菜单 */
         @media (min-width: 768px) {
             .theme-card {
-                flex: 0 0 30%;       
+                flex: 0 0 30%;      
                 max-width: 300px;    
                 min-height: 380px;   
                 margin-bottom: 30px; 
@@ -88,6 +88,12 @@
         .theme-1 { border-color: #4FC3F7; background: radial-gradient(circle at 50% 30%, #E1F5FE, #fff); box-shadow: 0 5px 0 #0288D1; }
         .theme-2 { border-color: #FFB74D; background: radial-gradient(circle at 50% 30%, #FFF3E0, #fff); box-shadow: 0 5px 0 #F57C00; }
         .theme-3 { border-color: #AED581; background: radial-gradient(circle at 50% 30%, #F1F8E9, #fff); box-shadow: 0 5px 0 #689F38; }
+        .theme-4 { border-color: #BA68C8; background: radial-gradient(circle at 50% 30%, #F3E5F5, #fff); box-shadow: 0 5px 0 #8E24AA; }
+        .theme-5 { border-color: #F06292; background: radial-gradient(circle at 50% 30%, #FCE4EC, #fff); box-shadow: 0 5px 0 #C2185B; }
+        .theme-6 { border-color: #7986CB; background: radial-gradient(circle at 50% 30%, #E8EAF6, #fff); box-shadow: 0 5px 0 #3F51B5; }
+        .theme-7 { border-color: #26A69A; background: radial-gradient(circle at 50% 30%, #E0F2F1, #fff); box-shadow: 0 5px 0 #00796B; }
+        .theme-8 { border-color: #FF7043; background: radial-gradient(circle at 50% 30%, #FBE9E7, #fff); box-shadow: 0 5px 0 #D84315; }
+
         .card-icon { font-size: 50px; margin-bottom: 10px; }
         .card-text { font-size: 22px; color: #546E7A; font-weight: 900; }
 
@@ -98,6 +104,13 @@
         .level-num { background: #DCEDC8; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #33691E; font-weight: 900; flex-shrink: 0; }
         .level-thumb { width: 100px; height: 100px; min-width: 100px; min-height: 100px; border-radius: 12px; object-fit: cover; border: 2px solid #AED581; background: #fff; flex-shrink: 0; }
         .level-name { font-size: 20px; color: #555; font-weight: bold; }
+
+        /* iPad 放大选关图片 */
+        @media (min-width: 768px) {
+            .level-thumb { width: 180px; height: 180px; min-width: 180px; min-height: 180px; }
+            .level-name { font-size: 32px; }
+            .level-num { width: 60px; height: 60px; font-size: 30px; }
+        }
 
         /* ================= 游戏核心布局 ================= */
         .game-layout { 
@@ -116,7 +129,6 @@
             transition: all 0.3s;
         }
 
-        /* iPad 上：左侧变窄 */
         @media (min-width: 768px) { 
             .left-panel { 
                 flex: 0.45; 
@@ -129,7 +141,6 @@
         .q-text { font-size: 20px; color: #01579B; margin: 0 5px; font-weight: 900; flex-shrink: 0; writing-mode: vertical-rl; text-orientation: upright; z-index: 2; }
         @media (min-width: 768px) { .q-text { writing-mode: horizontal-tb; font-size: 32px; margin-bottom: 10px; } }
 
-        /* 锁死题目图 */
         .q-img { 
             width: auto; height: 100%; max-width: 85%; 
             object-fit: contain; background: #fff;
@@ -164,7 +175,6 @@
             position: relative; flex-shrink: 0; overflow: hidden;
         }
 
-        /* iPad 放置区尺寸 */
         @media (min-width: 768px) {
             .drop-zone {
                 min-width: 28vh; min-height: 28vh; 
@@ -182,7 +192,7 @@
         .drop-zone.correct { background: #fff; border: 0; }
         .drop-zone .card { position: absolute !important; width: 100% !important; height: 100% !important; border: 0 !important; }
 
-        /* 贴纸库 (通用) */
+        /* 贴纸库 */
         .store-area { 
             height: 180px; 
             background: #FFF9C4; border-radius: 15px; border: 4px solid #FBC02D; 
@@ -190,7 +200,6 @@
             flex-shrink: 0;
         }
         
-        /* iPad 巨型贴纸库 (第一、三章) */
         @media (min-width: 768px) { 
             .store-area { 
                 height: 45vh; min-height: 350px; padding: 15px;
@@ -233,35 +242,27 @@
             .game-layout.mode-full .answer-group:nth-child(3) { flex: 0 0 90%; }
         }
 
-        /* =========================================
-           【手机端第二章 (Mode Full) 专属优化】
-           目标：贴纸库拉高，平铺展示3张图，禁止横向滚动
-           ========================================= */
+        /* 手机端全屏模式优化 */
         @media (max-width: 767px) {
-            /* 1. 贴纸库容器：稍微拉高，去掉固定像素限制 */
             .game-layout.mode-full .store-area {
                 height: auto;
-                flex: 0 0 22vh; /* 占据屏幕高度的 22% */
+                flex: 0 0 22vh; 
                 padding: 8px 2px;
             }
-
-            /* 2. 滚动区域：改为弹性换行布局 */
             .game-layout.mode-full .store-scroll {
                 display: flex;
-                flex-wrap: wrap;           /* 允许换行 */
-                justify-content: space-evenly; /* 均匀分布 */
+                flex-wrap: wrap;           
+                justify-content: space-evenly; 
                 align-items: center;
-                overflow-x: hidden;        /* 彻底关掉横向滚动条 */
+                overflow-x: hidden;        
                 padding: 0;
                 gap: 0;
             }
-
-            /* 3. 卡片：强制宽度 30%，这样一行刚好塞下3张 */
             .game-layout.mode-full .store-scroll .card {
-                width: 30%;                /* 核心：3张占 90% 宽 */
-                height: auto;              /* 高度自动适应 */
-                aspect-ratio: 1/1;         /* 保持正方形 */
-                flex: none;                /* 禁止 flex 自动计算大小 */
+                width: 30%;                
+                height: auto;              
+                aspect-ratio: 1/1;         
+                flex: none;                
                 margin: 0;
             }
         }
@@ -278,20 +279,15 @@
     <div class="sky-layer"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="grass"></div></div>
     
     <div class="app-container">
-        <!-- 主菜单 -->
         <div id="screen-main-menu" class="screen" style="display:flex">
             <div class="menu-title">🎈 連接詞練習 🎈</div>
             <div class="menu-grid" id="chapter-list"></div>
         </div>
-
-        <!-- 选关卡菜单 -->
         <div id="screen-sub-menu" class="screen">
             <div class="btn back-btn" onclick="playClick();showScreen('screen-main-menu')">↩ 返回</div>
             <div class="menu-title" id="sub-menu-title" style="font-size:32px;margin-bottom:15px;color:#FF7043">...</div>
             <div class="level-grid" id="level-list"></div>
         </div>
-
-        <!-- 游戏界面 -->
         <div id="screen-game" class="screen" style="padding-top: 0;">
             <div class="btn back-btn" onclick="playClick();showScreen('screen-sub-menu')" style="z-index: 200;">↩ 退出</div>
             <div id="game-layout" class="game-layout">
@@ -308,8 +304,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- 成功弹窗 -->
         <div class="modal" id="successModal">
             <div class="modal-box">
                 <h2 style="color:#558B2F;margin:10px;">🎉 太棒了！</h2>
@@ -339,27 +333,27 @@
                 ],
                 levels: [
                     {
-                        title: "故事 1: 肚子痛",
-                        question: { text: "為什麼？", img: "113.png" },
-                        cards: [{ key: "reason", img: "111.png" }, { key: "result", img: "112.png" }],
+                        title: "肚子痛",
+                        question: { text: "為什麼？", img: "肚子痛_题目.png" },
+                        cards: [{ key: "reason", img: "肚子痛_因为.png" }, { key: "result", img: "肚子痛_所以.png" }],
                         sentence: "因為吃了太多冰淇淋，所以肚子痛。"
                     },
                     {
-                        title: "故事 2: 感冒了",
-                        question: { text: "為什麼？", img: "123.png" },
-                        cards: [{ key: "reason", img: "121.png" }, { key: "result", img: "122.png" }],
+                        title: "感冒了",
+                        question: { text: "為什麼？", img: "感冒_题目.png" },
+                        cards: [{ key: "reason", img: "感冒_因为.png" }, { key: "result", img: "感冒_所以.png" }],
                         sentence: "因為淋雨全身濕透，所以感冒了。"
                     },
                     {
-                        title: "故事 3: 蛀牙了",
-                        question: { text: "為什麼？", img: "133.png" },
-                        cards: [{ key: "reason", img: "131.png" }, { key: "result", img: "132.png" }],
+                        title: "蛀牙了",
+                        question: { text: "為什麼？", img: "蛀牙_题目.png" },
+                        cards: [{ key: "reason", img: "蛀牙_因为.png" }, { key: "result", img: "蛀牙_所以.png" }],
                         sentence: "因為糖果吃太多，所以蛀牙了。"
                     },
                     {
-                        title: "故事 4: 髒娃娃",
-                        question: { text: "為什麼？", img: "143.png" },
-                        cards: [{ key: "reason", img: "141.png" }, { key: "result", img: "142.png" }],
+                        title: "髒娃娃",
+                        question: { text: "為什麼？", img: "洗娃娃_题目.png" },
+                        cards: [{ key: "reason", img: "洗娃娃_因为.png" }, { key: "result", img: "洗娃娃_所以.png" }],
                         sentence: "因為娃娃玩髒了，所以要幫它洗澡。"
                     }
                 ]
@@ -377,23 +371,23 @@
                 ],
                 levels: [
                     {
-                        title: "故事 1: 練小提琴",
-                        cards: [{ key: "step1", img: "211.png" }, { key: "step2", img: "212.png" }, { key: "step3", img: "213.png" }],
+                        title: "練小提琴",
+                        cards: [{ key: "step1", img: "练琴_虽然.png" }, { key: "step2", img: "练琴_但是.png" }, { key: "step3", img: "练琴_所以.png" }],
                         sentence: "雖然練琴很辛苦，但是我堅持練習，所以得了第一名。"
                     },
                     {
-                        title: "故事 2: 吃青菜",
-                        cards: [{ key: "step1", img: "221.png" }, { key: "step2", img: "222.png" }, { key: "step3", img: "223.png" }],
+                        title: "吃青菜",
+                        cards: [{ key: "step1", img: "吃菜_虽然.png" }, { key: "step2", img: "吃菜_但是.png" }, { key: "step3", img: "吃菜_所以.png" }],
                         sentence: "雖然我不愛吃菜，但是為了身體健康，所以我把菜吃光光。"
                     },
                     {
-                        title: "故事 3: 下雨天",
-                        cards: [{ key: "step1", img: "231.png" }, { key: "step2", img: "232.png" }, { key: "step3", img: "233.png" }],
+                        title: "下雨天",
+                        cards: [{ key: "step1", img: "下雨_虽然.png" }, { key: "step2", img: "下雨_但是.png" }, { key: "step3", img: "下雨_所以.png" }],
                         sentence: "雖然我想出去玩，但是外面下大雨，所以我在家裡玩。"
                     },
                     {
-                        title: "故事 4: 生病了",
-                        cards: [{ key: "step1", img: "241.png" }, { key: "step2", img: "242.png" }, { key: "step3", img: "243.png" }],
+                        title: "生病了",
+                        cards: [{ key: "step1", img: "吃药_虽然.png" }, { key: "step2", img: "吃药_但是.png" }, { key: "step3", img: "吃药_所以.png" }],
                         sentence: "雖然藥很苦，但是想到吃完藥病能好，所以我開心地吃藥。"
                     }
                 ]
@@ -410,28 +404,272 @@
                 ],
                 levels: [
                     {
-                        title: "故事 1: 下雨天",
-                        question: { text: "為什麼？", img: "313.png" },
-                        cards: [{ key: "cond", img: "311.png" }, { key: "act", img: "312.png" }],
+                        title: "下雨天",
+                        question: { text: "為什麼？", img: "下雨_题目.png" },
+                        cards: [{ key: "cond", img: "下雨_如果.png" }, { key: "act", img: "下雨_就.png" }],
                         sentence: "如果下雨了，我就帶雨傘。"
                     },
                     {
-                        title: "故事 2: 生病了",
-                        question: { text: "為什麼？", img: "323.png" },
-                        cards: [{ key: "cond", img: "321.png" }, { key: "act", img: "322.png" }],
+                        title: "生病了",
+                        question: { text: "為什麼？", img: "生病_题目.png" },
+                        cards: [{ key: "cond", img: "生病_如果.png" }, { key: "act", img: "生病_就.png" }],
                         sentence: "如果生病了，就要吃藥。"
                     },
                     {
-                        title: "故事 3: 肚子餓",
-                        question: { text: "為什麼？", img: "333.png" },
-                        cards: [{ key: "cond", img: "331.png" }, { key: "act", img: "332.png" }],
+                        title: "肚子餓",
+                        question: { text: "為什麼？", img: "饿_题目.png" },
+                        cards: [{ key: "cond", img: "饿_如果.png" }, { key: "act", img: "饿_就.png" }],
                         sentence: "如果肚子餓，我就吃麵包。"
                     },
                     {
-                        title: "故事 4: 很累",
-                        question: { text: "為什麼？", img: "343.png" },
-                        cards: [{ key: "cond", img: "341.png" }, { key: "act", img: "342.png" }],
+                        title: "很累",
+                        question: { text: "為什麼？", img: "累_题目.png" },
+                        cards: [{ key: "cond", img: "累_如果.png" }, { key: "act", img: "累_就.png" }],
                         sentence: "如果我很累，我就去睡覺。"
+                    }
+                ]
+            },
+            {
+                id: "ch4",
+                title: "之所以...是因為...",
+                icon: "🕵️", 
+                class: "theme-4",
+                mode: "mode-split",
+                items: [
+                    { label: "是因為", key: "cause" } 
+                ],
+                levels: [
+                    {
+                        title: "遲到之謎",
+                        question: { text: "之所以遲到...", img: "迟到_题目.png" }, 
+                        cards: [
+                            { key: "cause", img: "迟到_是因为.png" }, 
+                            { key: "wrong1", img: "迟到_错误.png" }  
+                        ],
+                        sentence: "之所以遲到，是因為鬧鐘壞了。"
+                    },
+                    {
+                        title: "冠軍之謎",
+                        question: { text: "之所以奪冠...", img: "冠军_题目.png" }, 
+                        cards: [
+                            { key: "cause", img: "冠军_是因为.png" }, 
+                            { key: "wrong1", img: "冠军_错误.png" } 
+                        ],
+                        sentence: "之所以得冠軍，是因為天天練習。"
+                    },
+                    {
+                        title: "變胖之謎",
+                        question: { text: "之所以變胖...", img: "变胖_题目.png" }, 
+                        cards: [
+                            { key: "cause", img: "变胖_是因为.png" }, 
+                            { key: "wrong1", img: "变胖_错误.png" }  
+                        ],
+                        sentence: "之所以變胖了，是因為吃太多糖果。"
+                    },
+                    {
+                        title: "全身濕透",
+                        question: { text: "之所以濕透...", img: "淋湿_题目.png" }, 
+                        cards: [
+                            { key: "cause", img: "淋湿_是因为.png" }, 
+                            { key: "wrong1", img: "淋湿_错误.png" }  
+                        ],
+                        sentence: "之所以全身濕透，是因為沒帶雨傘。"
+                    }
+                ]
+            },
+            {
+                id: "ch5",
+                title: "無論...都...",
+                icon: "🌋", 
+                class: "theme-5",
+                mode: "mode-full",
+                items: [
+                    { label: "無論", key: "cond" }, 
+                    { label: "還是", key: "cond" }, 
+                    { label: "都", key: "result" }
+                ],
+                levels: [
+                    {
+                        title: "去上學",
+                        cards: [
+                            { key: "cond", img: "上学_无论雨.png" },   
+                            { key: "cond", img: "上学_无论雪.png" },   
+                            { key: "result", img: "上学_都.png" } 
+                        ],
+                        sentence: "無論下雨還是下雪，我都要去上學。"
+                    },
+                    {
+                        title: "愛好",
+                        cards: [
+                            { key: "cond", img: "爱好_无论唱.png" },   
+                            { key: "cond", img: "爱好_无论跳.png" },  
+                            { key: "result", img: "爱好_都.png" }  
+                        ],
+                        sentence: "無論唱歌還是跳舞，我都覺得很開心。"
+                    },
+                    {
+                        title: "愛乾淨",
+                        cards: [
+                            { key: "cond", img: "卫生_无论手.png" },    
+                            { key: "cond", img: "卫生_无论脸.png" },    
+                            { key: "result", img: "卫生_都.png" }  
+                        ],
+                        sentence: "無論洗手還是洗臉，都要用毛巾擦乾。"
+                    },
+                    {
+                        title: "好習慣",
+                        cards: [
+                            { key: "cond", img: "刷牙_无论早.png" }, 
+                            { key: "cond", img: "刷牙_无论晚.png" },   
+                            { key: "result", img: "刷牙_都.png" }  
+                        ],
+                        sentence: "無論早上還是晚上，我都要刷牙。"
+                    }
+                ]
+            },
+            {
+                id: "ch6",
+                title: "...是...",
+                icon: "📘", 
+                class: "theme-6",
+                mode: "mode-split",
+                items: [
+                    { label: "是", key: "attr" } 
+                ],
+                levels: [
+                    {
+                        title: "顏色",
+                        question: { text: "太陽...", img: "太阳_题目.png" }, 
+                        cards: [
+                            { key: "attr", img: "太阳_是.png" },   
+                            { key: "wrong", img: "太阳_错误.png" }  
+                        ],
+                        sentence: "太陽是紅色的。"
+                    },
+                    {
+                        title: "形狀",
+                        question: { text: "輪胎...", img: "轮胎_题目.png" }, 
+                        cards: [
+                            { key: "attr", img: "轮胎_是.png" }, 
+                            { key: "wrong", img: "轮胎_错误.png" } 
+                        ],
+                        sentence: "汽車的輪胎是圓形的。"
+                    },
+                    {
+                        title: "味道",
+                        question: { text: "檸檬...", img: "柠檬_题目.png" }, 
+                        cards: [
+                            { key: "attr", img: "柠檬_是.png" },  
+                            { key: "wrong", img: "柠檬_错误.png" } 
+                        ],
+                        sentence: "檸檬是酸的。"
+                    },
+                    {
+                        title: "溫度",
+                        question: { text: "冰塊...", img: "冰块_题目.png" }, 
+                        cards: [
+                            { key: "attr", img: "冰块_是.png" },  
+                            { key: "wrong", img: "冰块_错误.png" }  
+                        ],
+                        sentence: "冰塊是冰冰涼涼的。"
+                    }
+                ]
+            },
+            {
+                id: "ch7",
+                title: "只要...就...",
+                icon: "🔑", 
+                class: "theme-7",
+                mode: "mode-split",
+                items: [
+                    { label: "只要", key: "cond" },
+                    { label: "就", key: "res" }
+                ],
+                levels: [
+                    {
+                        title: "亮燈",
+                        question: { text: "怎麼做？", img: "开灯_题目.png" }, 
+                        cards: [
+                            { key: "cond", img: "开灯_只要.png" }, 
+                            { key: "res", img: "开灯_就.png" }  
+                        ],
+                        sentence: "只要按下開關，燈就會亮。"
+                    },
+                    {
+                        title: "植物",
+                        question: { text: "怎麼做？", img: "种花_题目.png" }, 
+                        cards: [
+                            { key: "cond", img: "种花_只要.png" },  
+                            { key: "res", img: "种花_就.png" }   
+                        ],
+                        sentence: "只要澆水，花就會長大。"
+                    },
+                    {
+                        title: "努力",
+                        question: { text: "想考好？", img: "读书_题目.png" }, 
+                        cards: [
+                            { key: "cond", img: "读书_只要.png" }, 
+                            { key: "res", img: "读书_就.png" }     
+                        ],
+                        sentence: "只要努力讀書，就會考一百分。"
+                    },
+                    {
+                        title: "進場",
+                        question: { text: "想進去？", img: "进场_题目.png" }, 
+                        cards: [
+                            { key: "cond", img: "进场_只要.png" }, 
+                            { key: "res", img: "进场_就.png" }     
+                        ],
+                        sentence: "只要買票，就能進去玩。"
+                    }
+                ]
+            },
+            {
+                id: "ch8",
+                title: "不是...而是...",
+                icon: "🙅", 
+                class: "theme-8",
+                mode: "mode-split",
+                items: [
+                    { label: "不是", key: "not" },
+                    { label: "而是", key: "is" }
+                ],
+                levels: [
+                    {
+                        title: "繩子",
+                        question: { text: "這是？", img: "绳子_题目.png" }, 
+                        cards: [
+                            { key: "not", img: "绳子_不是.png" }, 
+                            { key: "is", img: "绳子_而是.png" }    
+                        ],
+                        sentence: "這不是蛇，而是一條繩子。"
+                    },
+                    {
+                        title: "狗狗",
+                        question: { text: "這是？", img: "狗_题目.png" }, 
+                        cards: [
+                            { key: "not", img: "狗_不是.png" },  
+                            { key: "is", img: "狗_而是.png" }     
+                        ],
+                        sentence: "這不是狼，而是哈士奇。"
+                    },
+                    {
+                        title: "水果",
+                        question: { text: "這是？", img: "番茄_题目.png" }, 
+                        cards: [
+                            { key: "not", img: "番茄_不是.png" }, 
+                            { key: "is", img: "番茄_而是.png" }     
+                        ],
+                        sentence: "這不是蘋果，而是番茄。"
+                    },
+                    {
+                        title: "飛機",
+                        question: { text: "天上？", img: "飞机_题目.png" }, 
+                        cards: [
+                            { key: "not", img: "飞机_不是.png" },  
+                            { key: "is", img: "飞机_而是.png" }   
+                        ],
+                        sentence: "這不是小鳥，而是飛機。"
                     }
                 ]
             }
@@ -518,15 +756,16 @@
             chapters[i].levels.forEach((l, li) => {
                 const b = document.createElement('div');
                 b.className = 'level-btn btn';
-                
                 const imgSrc = (l.question && l.question.img) ? l.question.img : (l.cards[0] ? l.cards[0].img : '');
                 
+                // 图片路径：images/文件名
+                const fullPath = `images/${imgSrc}`;
+
                 b.innerHTML = `
                     <div class="level-num">${li + 1}</div>
-                    <img class="level-thumb" src="${imgSrc}">
-                    <div class="level-name">${l.title.split(': ')[1] || l.title}</div>
+                    <img class="level-thumb" src="${fullPath}">
+                    <div class="level-name">${l.title}</div>
                 `;
-                
                 b.onclick = () => { playClick(); startGame(li) };
                 c.appendChild(b);
             });
@@ -549,6 +788,9 @@
             const d = ch.levels[curLv], layout = document.getElementById('game-layout');
             layout.className = 'game-layout';
             if (ch.mode) layout.classList.add(ch.mode);
+            
+            // 图片文件夹
+            const folderPath = `images/`;
 
             const leftPanel = document.getElementById('panel-question');
             if (ch.mode === 'mode-full') {
@@ -556,7 +798,7 @@
             } else {
                 leftPanel.style.display = 'flex';
                 document.getElementById('q-text').innerText = d.question.text;
-                document.getElementById('q-img').src = d.question.img;
+                document.getElementById('q-img').src = folderPath + d.question.img;
             }
             
             const ac = document.getElementById('answer-container');
@@ -576,7 +818,7 @@
                 c.draggable = true;
                 c.id = 'c-' + Math.random().toString(36).substr(2, 9);
                 c.dataset.key = cd.key;
-                c.innerHTML = `<img src="${cd.img}">`;
+                c.innerHTML = `<img src="${folderPath + cd.img}">`;
                 c.onmousedown = () => playClick();
                 c.addEventListener('touchstart', () => playClick());
 
